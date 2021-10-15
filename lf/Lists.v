@@ -296,8 +296,11 @@ Proof. reflexivity. Qed.
 Fixpoint nonzeros (l:natlist) : natlist :=
   match l with
   | nil => nil
-  | (S n) :: t => (S n) :: (nonzeros t)
-  | O :: t => nonzeros t
+  | h :: t =>
+    match h =? O with
+    | true => nonzeros t
+    | false => h :: (nonzeros t)
+    end
   end.
 
 Example test_nonzeros:
@@ -866,17 +869,26 @@ Search (?x + ?y = ?y + ?x).
 Theorem app_nil_r : forall l : natlist,
   l ++ [] = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l. induction l as [| n l' IHl'].
+  - reflexivity.
+  - simpl. rewrite -> IHl'. reflexivity.
+Qed.
 
 Theorem rev_app_distr: forall l1 l2 : natlist,
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2. induction l1 as [| n l' IHl'].
+  - simpl. rewrite app_nil_r. reflexivity.
+  - simpl. rewrite -> IHl'. rewrite app_assoc. reflexivity.
+Qed.
 
 Theorem rev_involutive : forall l : natlist,
   rev (rev l) = l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l. induction l as [| n l' IHl'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> rev_app_distr. rewrite -> IHl'. reflexivity.
+Qed.
 
 (** There is a short solution to the next one.  If you find yourself
     getting tangled up, step back and try to look for a simpler
@@ -885,14 +897,23 @@ Proof.
 Theorem app_assoc4 : forall l1 l2 l3 l4 : natlist,
   l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2 l3 l4. rewrite -> app_assoc. rewrite -> app_assoc. reflexivity.
+Qed.
 
 (** An exercise about your implementation of [nonzeros]: *)
 
 Lemma nonzeros_app : forall l1 l2 : natlist,
   nonzeros (l1 ++ l2) = (nonzeros l1) ++ (nonzeros l2).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l1 l2. induction l1 as [| n l IHl'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHl'.
+    {
+      destruct n as [| n'].
+      - reflexivity.
+      - reflexivity.
+    } (*n = 0 case destruct to match*)
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (eqblist)
