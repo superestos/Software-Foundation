@@ -497,7 +497,13 @@ Definition manual_grade_for_add_comm_informal : option (nat*string) := None.
 Theorem add_shuffle3 : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  assert(H: n + (m + p) = (n + m) + p). { rewrite add_assoc. reflexivity. }
+  assert(I: n + m = m + n). { rewrite add_comm. reflexivity. }
+  assert(J: m + (n + p) = m + n + p). { rewrite add_assoc. reflexivity. }
+  rewrite -> H. rewrite -> I. rewrite -> J.
+  simpl. reflexivity.
+Qed.
 
 (** Now prove commutativity of multiplication.  You will probably
     want to define and prove a "helper" theorem to be used
