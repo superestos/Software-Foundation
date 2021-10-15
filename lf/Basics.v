@@ -1302,7 +1302,13 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  destruct c eqn:Ec.
+    - reflexivity.
+    - rewrite -> andb_commutative. simpl. intros H. rewrite -> H. reflexivity.
+    (* use commutative to simpl -> left is false *)
+Qed.
+
 (** [] *)
 
 (** Before closing the chapter, let's mention one final
