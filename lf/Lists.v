@@ -922,25 +922,45 @@ Qed.
     lists of numbers for equality.  Prove that [eqblist l l]
     yields [true] for every list [l]. *)
 
-Fixpoint eqblist (l1 l2 : natlist) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint eqblist (l1 l2 : natlist) : bool :=
+  match l1, l2 with
+  | nil, nil => true
+  | h :: t, nil => false
+  | nil, h :: t => false
+  | h1 :: t1, h2 :: t2 =>
+    match h1 =? h2 with
+    | true => eqblist t1 t2
+    | false => false
+    end
+  end.
 
 Example test_eqblist1 :
   (eqblist nil nil = true).
- (* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 
 Example test_eqblist2 :
   eqblist [1;2;3] [1;2;3] = true.
-(* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
 
 Example test_eqblist3 :
   eqblist [1;2;3] [1;2;4] = false.
- (* FILL IN HERE *) Admitted.
+Proof. simpl. reflexivity. Qed.
+
+Theorem nat_reflexivity : forall n:nat,
+  eqb n n = true.
+Proof.
+  intros n. induction n as [| n' IHn'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHn'. reflexivity.
+Qed.
 
 Theorem eqblist_refl : forall l:natlist,
   true = eqblist l l.
-Proof.
-  (* FILL IN HERE *) Admitted.
+Proof. 
+  intros l. induction l as [| h l' IHl'].
+  - simpl. reflexivity.
+  - simpl. rewrite -> IHl'. rewrite -> nat_reflexivity. reflexivity.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
