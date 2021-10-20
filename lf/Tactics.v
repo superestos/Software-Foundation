@@ -328,7 +328,8 @@ Example discriminate_ex3 :
     x :: y :: l = [] ->
     x = z.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X x y z l j contra. discriminate contra. 
+Qed. 
 (** [] *)
 
 (** For a slightly more involved example, we can use [discriminate] to
