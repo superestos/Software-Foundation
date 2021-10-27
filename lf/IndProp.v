@@ -339,7 +339,11 @@ Proof.
 Theorem SSSSev__even : forall n,
   ev (S (S (S (S n)))) -> ev n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n E.
+  inversion E as [| n' E' Heq].
+  (* We are in the [E = ev_SS n' E'] case now. *)
+  apply evSS_ev. apply E'.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (ev5_nonsense)
