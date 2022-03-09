@@ -225,7 +225,8 @@ Proof. reflexivity. Qed.
 Lemma t_apply_empty : forall (A : Type) (x : string) (v : A),
   (_ !-> v) x = v.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (t_update_eq)
@@ -237,7 +238,9 @@ Proof.
 Lemma t_update_eq : forall (A : Type) (m : total_map A) x v,
   (x !-> v ; m) x = v.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros A m x v.
+  unfold t_update. rewrite <- eqb_string_refl. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (t_update_neq)
@@ -245,12 +248,13 @@ Proof.
     On the other hand, if we update a map [m] at a key [x1] and then
     look up a _different_ key [x2] in the resulting map, we get the
     same result that [m] would have given: *)
-
 Theorem t_update_neq : forall (A : Type) (m : total_map A) x1 x2 v,
   x1 <> x2 ->
   (x1 !-> v ; m) x2 = m x2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros A m x1 x2 v eq.
+  unfold t_update.
+Admitted.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (t_update_shadow)
