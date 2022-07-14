@@ -390,7 +390,11 @@ Proof.
 Fact not_implies_our_not : forall (P:Prop),
   ~ P -> (forall (Q:Prop), P -> Q).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros P HPA Q HP.
+  unfold not in HPA.
+  apply HPA in HP.
+  destruct HP.
+Qed.
 (** [] *)
 
 (** Inequality is a frequent enough example of negated statement
