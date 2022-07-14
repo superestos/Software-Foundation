@@ -515,7 +515,7 @@ Proof.
   intros m n.
   induction m as [| m' IHm'].
   - rewrite -> mult_0_l. rewrite -> mul_0_r. reflexivity.
-  - simpl.
+  - simpl. rewrite -> IHm'.
 Abort.
 (** [] *)
 
@@ -562,16 +562,28 @@ Qed.
 Theorem plus_leb_compat_l : forall n m p : nat,
   n <=? m = true -> (p + n) <=? (p + m) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p H.
+  induction p as [| p' IHp'].
+  - rewrite -> plus_O_n. rewrite -> plus_O_n. rewrite -> H. reflexivity.
+  - simpl. rewrite -> IHp'. reflexivity.
+Qed.
 
 Theorem S_neqb_0 : forall n:nat,
   (S n) =? 0 = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  destruct n.
+  - reflexivity.
+  - simpl. reflexivity.
+Qed.
 
 Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n as [| n' IHn'].
+  - reflexivity.
+  - simpl. rewrite -> add_0_r. reflexivity.
+Qed.
 
 Theorem all3_spec : forall b c : bool,
   orb
@@ -580,7 +592,15 @@ Theorem all3_spec : forall b c : bool,
          (negb c))
   = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  destruct b.
+  - destruct c.
+    + simpl. reflexivity.
+    + simpl. reflexivity.
+  - destruct c.
+    + simpl. reflexivity.
+    + simpl. reflexivity.
+Qed.
 
 Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
