@@ -806,7 +806,7 @@ Theorem map_rev : forall (X Y : Type) (f : X -> Y) (l : list X),
 Proof.
   intros X Y f l. induction l as [| n l' IHl'].
   - simpl. reflexivity.
-  - simpl. rewrite map_app. (* unify "rev (map f l') ++ [f n]" with "map f (rev l') ++ map f [n]" *)
+  - simpl. rewrite -> map_app. (* rewrite "map f (rev l' ++ [n])" with "map f (rev l') ++ map f [n]" *)
     rewrite IHl'. reflexivity.
 Qed.
 (** [] *)
@@ -988,7 +988,11 @@ Proof. reflexivity. Qed.
 Theorem fold_length_correct : forall X (l : list X),
   fold_length l = length l.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros X l. induction l as [| x l' IHl'].
+  - reflexivity.
+  - simpl. rewrite <- IHl'. reflexivity.
+Qed.
+(* FILL IN HERE *)
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (fold_map)
