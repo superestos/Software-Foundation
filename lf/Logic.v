@@ -463,9 +463,9 @@ Definition manual_grade_for_double_neg_inf : option (nat*string) := None.
 Theorem contrapositive : forall (P Q : Prop),
   (P -> Q) -> (~Q -> ~P).
 Proof.
-  intros P Q H. unfold not. intros G I. 
-  apply G. (* Q -> False *)
-  apply H. (* P -> Q *)
+  intros P Q H. unfold not. intros G I. (* goal: False *)
+  apply G. (* Q -> False , goal: Q *)
+  apply H. (* P -> Q , goal: P *)
   apply I. (* P *)
 Qed.
 (** [] *)
@@ -624,8 +624,13 @@ Qed.
 Theorem iff_trans : forall P Q R : Prop,
   (P <-> Q) -> (Q <-> R) -> (P <-> R).
 Proof.
-  (* intros P Q R [HPQ HQP] [HQR HRQ]. split. *)
-(* FILL IN HERE *) Admitted.
+  intros P Q R [HPQ HQP] [HQR HRQ]. split.
+  - intros HP. (* goal: R *)
+    apply HQR. (* goal: Q *)
+    apply HPQ. (* goal: P *)
+    apply HP.
+  - intros HR. apply HQP. apply HRQ. apply HR.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (or_distributes_over_and) *)
