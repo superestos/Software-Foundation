@@ -925,18 +925,26 @@ End R.
       Hint: choose your induction carefully! *)
 
 Inductive subseq : list nat -> list nat -> Prop :=
-(* FILL IN HERE *)
+  | subseq_empty : subseq nil nil
+  | subseq_skip  e l1 l2 (H : subseq l1 l2) : subseq l1 (cons e l2)
+  | subseq_match e l1 l2 (H : subseq l1 l2) : subseq (cons e l1) (cons e l2)
 .
+(* FILL IN HERE *)
+
 
 Theorem subseq_refl : forall (l : list nat), subseq l l.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros l. induction l as [| x l' IHl].
+  - apply subseq_empty.
+  - apply (subseq_match x l' l' IHl).
+Qed.
 
 Theorem subseq_app : forall (l1 l2 l3 : list nat),
   subseq l1 l2 ->
   subseq l1 (l2 ++ l3).
 Proof.
   (* FILL IN HERE *) Admitted.
+(** [] *)
 
 Theorem subseq_trans : forall (l1 l2 l3 : list nat),
   subseq l1 l2 ->
