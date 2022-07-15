@@ -516,7 +516,7 @@ Proof.
   induction m as [| m' IHm'].
   - rewrite -> mult_0_l. rewrite -> mul_0_r. reflexivity.
   - simpl. rewrite -> IHm'.
-Abort.
+Admitted.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard, optional (more_exercises)

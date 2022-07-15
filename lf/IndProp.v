@@ -353,7 +353,10 @@ Qed.
 Theorem ev5_nonsense :
   ev 5 -> 2 + 2 = 9.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros H. inversion H as [| n E H3].
+  inversion E as [| n' E' H1]. 
+  inversion H1.
+Qed.
 (** [] *)
 
 (** The [inversion] tactic does quite a bit of work. For
