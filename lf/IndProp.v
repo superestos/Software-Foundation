@@ -355,7 +355,7 @@ Theorem ev5_nonsense :
 Proof.
   intros H. inversion H as [| n E H3].
   inversion E as [| n' E' H1]. 
-  inversion H1.
+  inversion E'.
 Qed.
 (** [] *)
 
@@ -521,7 +521,11 @@ Qed.
 (** **** Exercise: 2 stars, standard (ev_sum) *)
 Theorem ev_sum : forall n m, ev n -> ev m -> ev (n + m).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m E F.
+  induction E as [| n' E' IH].
+  - apply F.
+  - simpl. apply (ev_SS (n' + m) IH).
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, advanced, optional (ev'_ev)
