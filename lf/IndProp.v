@@ -728,7 +728,11 @@ Qed.
 Theorem n_le_m__Sn_le_Sm : forall n m,
   n <= m -> S n <= S m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m H.
+  induction H as [| n' E IH].
+  - apply le_n.
+  - apply (le_S (S n) (S n') IH).
+Qed.
 
 Theorem Sn_le_Sm__n_le_m : forall n m,
   S n <= S m -> n <= m.
