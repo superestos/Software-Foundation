@@ -557,7 +557,11 @@ Proof.
 Theorem ev_ev__ev : forall n m,
   ev (n+m) -> ev n -> ev m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m F E.
+  induction E as [| n' E' IH].
+  - apply F.
+  - simpl in F. apply evSS_ev in F. apply IH in F. apply F.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard, optional (ev_plus_plus)
@@ -566,10 +570,26 @@ Proof.
     But, you will need a clever assertion and some tedious rewriting.
     Hint:  is [(n+m) + (n+p)] even? *)
 
+Theorem ev_n_plus_n : forall n,
+  ev (n+n).
+Proof.
+  induction n as [| n' IHn'].
+    - apply ev_0.
+    - simpl. rewrite <- plus_n_Sm. apply (ev_SS (n' + n') IHn').
+Qed.
+
 Theorem ev_plus_plus : forall n m p,
   ev (n+m) -> ev (n+p) -> ev (m+p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p H I.
+  assert (J: ev((n+m)+(n+p)) ). { apply ev_sum. apply H. apply I. }
+  assert (K: n + m + (n + p) = (n + n) + (m + p) ).
+  { rewrite add_shuffle3. rewrite -> add_assoc. rewrite -> add_assoc. rewrite <- add_assoc. reflexivity. }
+  rewrite K in J.
+  assert (L: ev(n + n) -> ev(m + p)). { apply ev_ev__ev. apply J. }
+  apply L.
+  apply ev_n_plus_n.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
