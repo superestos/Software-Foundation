@@ -328,8 +328,11 @@ Qed.
 Lemma mult_is_O :
   forall n m, n * m = 0 -> n = 0 \/ m = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  intros n m H. induction n as [| n' IHn].
+  - left. reflexivity.
+  - simpl in H. apply and_exercise in H as [H1 H2].
+    right. apply H1.
+Qed.
 
 (** **** Exercise: 1 star, standard (or_commut) *)
 Theorem or_commut : forall P Q : Prop,
