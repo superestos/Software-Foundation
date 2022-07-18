@@ -254,7 +254,10 @@ Theorem t_update_neq : forall (A : Type) (m : total_map A) x1 x2 v,
 Proof.
   intros A m x1 x2 v eq.
   unfold t_update.
-Admitted.
+  apply false_eqb_string in eq. rewrite eq.
+  reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (t_update_shadow)
