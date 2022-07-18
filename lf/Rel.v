@@ -244,7 +244,14 @@ Definition symmetric {X: Type} (R: relation X) :=
 Theorem le_not_symmetric :
   ~ (symmetric le).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not. intros H. unfold symmetric in H.
+  assert(nonsense: 1 <= 0). {
+    assert(I: 0 <= 1). { apply (le_S 0). apply le_n. }
+    apply H with (a := 0) (b := 1) in I. apply I.
+  }
+  apply le_Sn_n with (n := 0) in nonsense.
+  destruct nonsense.
+Qed.
 (** [] *)
 
 (** A relation [R] is _antisymmetric_ if [R a b] and [R b a] together
