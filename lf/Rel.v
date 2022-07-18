@@ -170,7 +170,10 @@ Proof.
   unfold lt. unfold transitive.
   intros n m o Hnm Hmo.
   induction Hmo as [| m' Hm'o].
-    (* FILL IN HERE *) Admitted.
+  - apply (le_S (S n) m Hnm).
+  - apply (le_S (S n) m' IHHm'o).
+Qed.
+    (* FILL IN HERE *)
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (lt_trans'')
