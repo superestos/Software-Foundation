@@ -821,16 +821,44 @@ Qed.
     Write a relation [bevalR] in the same style as
     [aevalR], and prove that it is equivalent to [beval]. *)
 
+(*
+  Fixpoint beval (e : bexp) : bool :=
+    match e with
+    | BTrue       => true
+    | BFalse      => false
+    | BEq a1 a2   => (aeval a1) =? (aeval a2)
+    | BLe a1 a2   => (aeval a1) <=? (aeval a2)
+    | BNot b      => negb (beval b)
+    | BAnd b1 b2  => andb (beval b1) (beval b2)
+    end.
+*)
+
 Reserved Notation "e '==>b' b" (at level 90, left associativity).
 Inductive bevalR: bexp -> bool -> Prop :=
-(* FILL IN HERE *)
+  | E_BTrue: BTrue ==>b true
+  | E_BFalse: BFalse ==>b false
+  (*
+  | E_BEq (a1 a2: aexp) (n1 n2: nat):
+    (a1 ==> n1) -> (a2 ==> n2) -> (BEq a1 a2) ==>b n1 =? n2
+  | E_BLe (a1 a2: aexp) (n1 n2: nat):
+    (a1 ==> n1) -> (a2 ==> n2) -> (BEq a1 a2) ==>b n1 <=? n2
+  *)
+  | E_BNot (e: bexp) (b: bool):
+    (e ==>b b) -> ((BNot e) ==>b negb b)
+  | E_BAnd (e1 e2: bexp) (b1 b2: bool):
+    (e1 ==>b b1) -> (e2 ==>b b2) -> ((BAnd e1 e2) ==>b (andb b1 b2))
 where "e '==>b' b" := (bevalR e b) : type_scope
 .
 
 Lemma beval_iff_bevalR : forall b bv,
   b ==>b bv <-> beval b = bv.
-Proof.
-  (* FILL IN HERE *) Admitted.
+  split.
+  - (* -> *)
+    intros H; induction H; subst; try H; try reflexivity.
+  - (* -> *)
+    generalize dependent b;
+    induction b; simpl; intros; subst; try constructor; try apply IHb1; try apply IHb2.
+Admitted.
 (** [] *)
 
 End AExp.
