@@ -1548,7 +1548,7 @@ Proof.
   apply E_WhileFalse.
   reflexivity.
 Qed.
-  (* FILL IN HERE *) Admitted.
+
 (** [] *)
 
 (* ================================================================= *)
