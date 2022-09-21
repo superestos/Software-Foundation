@@ -787,8 +787,14 @@ Qed.
 Theorem step_deterministic :
   deterministic step.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  unfold deterministic. intros x y1 y2 Hy1 Hy2.
+  generalize dependent y2.
+  induction Hy1; intros y2 Hy2;
+    inversion Hy2; subst; try solve_by_invert.
+  - reflexivity.
+  - reflexivity.
+  - apply IHHy1 in H3. rewrite H3. reflexivity.
+Qed.
 
 Module Temp5.
 
