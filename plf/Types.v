@@ -183,8 +183,11 @@ Hint Unfold stuck : core.
 Example some_term_is_stuck :
   exists t, stuck t.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  exists (iszro fls). unfold stuck. split.
+  - unfold normal_form. intros contra. destruct contra.
+    induction x; inversion H. inversion H2.
+  - intros contra; inversion contra; inversion H.
+Qed.
 
 (** However, although values and normal forms are _not_ the same in
     this language, the set of values is a subset of the set of normal
