@@ -770,8 +770,18 @@ Definition manual_grade_for_smallstep_bools : option (nat*string) := None.
 Theorem strong_progress_bool : forall t,
   value t \/ (exists t', t --> t').
 Proof.
-  (* FILL IN HERE *) Admitted.
-(** [] *)
+  induction t.
+  - (* value tru *)
+    left. apply v_tru.
+  - (* value fls *)
+    left. apply v_fls.
+  - (* test *)
+    right. destruct t1. (* destruct condition t1 *)
+    + exists t2. apply ST_IfTrue.
+    + exists t3. apply ST_IfFalse.
+    + destruct IHt1. inversion H. inversion H.
+      exists (test x t2 t3). apply ST_If. assumption.
+Qed.
 
 (** **** Exercise: 2 stars, standard, optional (step_deterministic) *)
 Theorem step_deterministic :
