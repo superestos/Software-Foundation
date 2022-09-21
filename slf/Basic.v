@@ -273,7 +273,13 @@ Definition quadruple : val :=
     [4*n]. Hint: follow the pattern of the previous proof. *)
 
 (* FILL IN HERE *)
-
+Lemma quadruple_proof : forall (n:int),
+  triple (quadruple n)
+    \[]
+    (fun r => \[r = 4*n]).
+Proof.
+  xwp. xapp. xapp. xsimpl. math.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, especially useful (triple_inplace_double) *)
@@ -292,7 +298,13 @@ Definition inplace_double : val :=
     pattern of the first example, namely [triple_incr]. *)
 
 (* FILL IN HERE *)
-
+Lemma inplace_double_proof : forall (p:loc) (n:int),
+  triple <{ inplace_double p }>
+    (p ~~> n)
+    (fun _ => (p ~~> (n*2))).
+Proof.
+  xwp. xapp. xapp. xapp. xsimpl. math.
+Qed.
 (** [] *)
 
 (** From here on, we use the command [Proof using] for introducing a proof
