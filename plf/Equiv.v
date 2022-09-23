@@ -416,7 +416,16 @@ Theorem while_true : forall b c,
     <{ while b do c end }>
     <{ while true do skip end }>.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c bTrue st st'.
+  split; intros H.
+  - apply (while_true_nonterm b c st st') in bTrue.
+    apply bTrue in H. inversion H.
+  - apply (E_WhileTrue st) in H.
+    + apply (while_true_nonterm) in H.
+      destruct H. unfold bequiv. reflexivity.
+    + reflexivity.
+    + apply E_Skip.
+Qed.
 (** [] *)
 
 (** A more interesting fact about [while] commands is that any number
