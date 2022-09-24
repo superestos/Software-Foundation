@@ -1107,7 +1107,12 @@ Lemma multistep_congr_2 : forall v1 t2 t2',
      t2 -->* t2' ->
      P v1 t2 -->* P v1 t2'.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros t1 t2 t2' Hv1 Ht2. induction Ht2.
+  - apply multi_refl.
+  - apply multi_step with (P t1 y).
+    + apply ST_Plus2. assumption. assumption.
+    + assumption.
+Qed.
 (** [] *)
 
 (** With these lemmas in hand, the main proof is a straightforward
