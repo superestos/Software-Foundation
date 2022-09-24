@@ -1252,7 +1252,11 @@ Lemma step__eval : forall t t' n,
      t  ==> n.
 Proof.
   intros t t' n Hs. generalize dependent n.
-  (* FILL IN HERE *) Admitted.
+  induction Hs; intros n Hm; inversion Hm; subst.
+  - apply E_Plus; apply E_Const.
+  - apply E_Plus; try apply IHHs; assumption.
+  - apply E_Plus; try apply IHHs; assumption.
+Qed.
 (** [] *)
 
 (** The fact that small-step reduction implies big-step evaluation is now
