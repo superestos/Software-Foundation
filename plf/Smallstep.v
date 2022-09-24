@@ -1220,7 +1220,15 @@ Theorem eval__multistep : forall t n,
     includes [-->]. *)
 
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros t n H. induction H.
+  - apply multi_refl.
+  - apply multi_trans with (P (C v1) t2).
+    eapply multistep_congr_1. assumption.
+    apply multi_trans with (P (C v1) (C v2)).
+    eapply multistep_congr_2. apply v_const. assumption.
+    apply multi_step with (C (v1 + v2)).
+    apply ST_PlusConstConst. apply multi_refl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (eval__multistep_inf)
