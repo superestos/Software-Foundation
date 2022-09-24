@@ -500,7 +500,18 @@ Theorem assign_aequiv : forall (X : string) (a : aexp),
   aequiv <{ X }> a ->
   cequiv <{ skip }> <{ X := a }>.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X a Aeq st st'.
+  split; intros H; inversion H; subst.
+  - unfold aequiv in Aeq.
+    assert (HSteq: (X !-> (aeval st' a) ; st') = st').
+    { rewrite <- (Aeq st'). apply t_update_same. }
+    assert (Hx : st' =[ X := a ]=> (X !-> (aeval st' a) ; st') -> st' =[ X := a ]=> st' ).
+    { intros H0. rewrite HSteq in H0. assumption. }
+    apply Hx.
+    apply E_Asgn.
+    reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (equiv_classes) *)
