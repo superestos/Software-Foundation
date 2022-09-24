@@ -334,8 +334,9 @@ Proof. eauto. Qed.
 Lemma wp_seq : forall P Q c1 c2,
     derivable P c1 (wp c2 Q) -> derivable (wp c2 Q) c2 Q -> derivable P <{c1; c2}> Q.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros P Q c1 c2 H1 H2.
+  apply H_Seq with (wp c2 Q); assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (wp_invariant) *)
