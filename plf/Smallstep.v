@@ -1350,10 +1350,23 @@ Inductive step : tm -> tm -> Prop :=
     language. *)
 
 (** **** Exercise: 3 stars, standard (combined_step_deterministic) *)
-Theorem combined_step_deterministic: (deterministic step) \/ ~ (deterministic step).
+Theorem combined_step_deterministic: (deterministic step).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros x y1 y2 Hy1 Hy2.
+  generalize dependent y2.
+  induction Hy1; intros y2 Hy2;
+  inversion Hy2; subst; try solve_by_invert; try reflexivity.
+  - (* P t1' t2 = P t1'0 t2 *)
+    apply IHHy1 in H2. rewrite H2. reflexivity.
+  - (* P t1' t2 = P t1 t2' *)
+    inversion H1; subst; try inversion Hy1.
+  - (* P v1 t2' = P t1' t2 *)
+    inversion H; subst; try inversion H3.
+  - (* P v1 t2' = P v1 t2'0 *)
+    apply IHHy1 in H4. rewrite H4. reflexivity.
+  - (* test t1' t2 t3 = test t1'0 t2 t3 *)
+    apply IHHy1 in H3. rewrite H3. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (combined_strong_progress) *)
