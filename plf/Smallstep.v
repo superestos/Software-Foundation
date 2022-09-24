@@ -1371,10 +1371,20 @@ Qed.
 
 (** **** Exercise: 3 stars, standard (combined_strong_progress) *)
 Theorem combined_strong_progress :
-  (forall t, value t \/ (exists t', t --> t'))
-  \/ ~ (forall t, value t \/ (exists t', t --> t')).
+  ~ (forall t, value t \/ (exists t', t --> t')).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros contra.
+  assert (H: ~(value (P (C 0) tru) \/ (exists t', (P (C 0) tru) --> t'))).
+  {
+    intros [Hv | Hs].
+    - inversion Hv.
+    - inversion Hs. destruct x; subst; try inversion H; subst.
+      + inversion H1.
+      + inversion H5.
+  }
+  apply H in contra.
+  destruct contra.
+Qed.
 (** [] *)
 
 End Combined.
