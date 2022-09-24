@@ -712,7 +712,12 @@ Theorem hoare_asgn_fwd :
   {{fun st => P (X !-> m ; st)
            /\ st X = aeval (X !-> m ; st) a }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros m a P st st' Hc [HP HXm].
+  split; inversion Hc; subst; rewrite t_update_shadow; rewrite t_update_same.
+  - apply HP.
+  - rewrite t_update_eq.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, advanced, optional (hoare_asgn_fwd_exists)
