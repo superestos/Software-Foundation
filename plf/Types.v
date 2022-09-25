@@ -405,7 +405,34 @@ Proof.
     + (* t1 can take a step *)
       destruct H as [t1' H1].
       exists (<{ if t1' then t2 else t3 }>). auto.
-  (* FILL IN HERE *) Admitted.
+  - (* T_Succ *)
+    destruct IHHT.
+    + (* t1 is a value *)
+      left. assert (succ_v: nvalue <{ succ t1 }>).
+      {
+        apply nv_succ.
+        apply nat_canonical;
+        assumption.
+      }
+      unfold value. right. apply succ_v.
+    + inversion H. right. exists <{ succ x }>.
+      apply ST_Succ. assumption.
+  - (* T_pred *)
+    destruct IHHT.
+    + inversion H; subst.
+      * left. inversion H0; subst; inversion HT.
+      * right. inversion H0; subst.
+        exists <{ 0 }>. apply ST_Pred0.
+        exists t. apply ST_PredSucc. assumption.
+    + inversion H; subst. right.
+      exists <{ pred x }>. apply ST_Pred. assumption.
+  - (* T_Iszero *)
+    right. destruct IHHT.
+    + inversion H; inversion H0; subst; inversion HT.
+      * exists <{ true }>. apply ST_Iszero0.
+      * exists <{ false }>. apply ST_IszeroSucc. assumption.
+    + inversion H. exists <{ iszero x }>. apply ST_Iszero. assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (finish_progress_informal)
