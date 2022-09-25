@@ -610,11 +610,18 @@ Qed.
 *)
 
 Theorem subject_expansion:
-  (forall t t' T, t --> t' /\ |- t' \in T -> |- t \in T)
-  \/
   ~ (forall t t' T, t --> t' /\ |- t' \in T -> |- t \in T).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros contra.
+  assert(nonsense: ~(|- (ite <{ true }> <{ true }> <{ 0 }>) \in Bool)).
+  {
+    intros Hc. inversion Hc; subst. inversion H5.
+  }
+  apply nonsense.
+  apply contra with <{ true }>. split.
+  - apply ST_IfTrue.
+  - apply T_True.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (variation1)
