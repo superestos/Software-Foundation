@@ -501,7 +501,20 @@ Proof.
       + (* ST_IfFalse *) assumption.
       + (* ST_If *) apply T_If; try assumption.
         apply IHHT1; assumption.
-    (* FILL IN HERE *) Admitted.
+    - (* T_Succ *)
+      inversion HE; subst.
+      apply T_Succ. apply IHHT in H0. apply H0.
+    - (* T_Pred *)
+      inversion HE; subst.
+      + apply HT.
+      + apply succ_hastype_nat__hastype_nat. apply HT.
+      + apply IHHT in H0. apply T_Pred. apply H0.
+    - (* T_Iszero *)
+      inversion HE; subst.
+      + apply T_True.
+      + apply T_False.
+      + apply IHHT in H0. apply T_Iszero. apply H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (finish_preservation_informal)
