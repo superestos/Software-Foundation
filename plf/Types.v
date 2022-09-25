@@ -342,7 +342,10 @@ Example succ_hastype_nat__hastype_nat : forall t,
   |- <{succ t}> \in Nat ->
   |- t \in Nat.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros t H.
+  inversion H; subst.
+  assumption.
+Qed.
 (** [] *)
 
 (* ----------------------------------------------------------------- *)
