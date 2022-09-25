@@ -200,7 +200,10 @@ Hint Unfold stuck : core.
 Example some_term_is_stuck :
   exists t, stuck t.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  exists (scc tru). split.
+  - intros contra. inversion contra. inversion H. subst. inversion H1.
+  - intros contra. inversion contra. inversion H. inversion H. inversion H1.
+Qed.
 (** [] *)
 
 (** However, although values and normal forms are _not_ the same in
