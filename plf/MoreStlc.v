@@ -1264,10 +1264,10 @@ Inductive step : tm -> tm -> Prop :=
   (* Add rules for the following extensions. *)
 
   (* pairs *)
-  | ST_Pairs1 : forall t1 t1' t2,
+  | ST_Pair1 : forall t1 t1' t2,
     t1 --> t1' ->
     <{(t1, t2)}> --> <{(t1', t2)}>
-  | ST_Pairs2 : forall v1 t2 t2',
+  | ST_Pair2 : forall v1 t2 t2',
     value v1 ->
     t2 --> t2' ->
     <{(v1, t2)}> --> <{(v1, t2')}>
@@ -1939,13 +1939,38 @@ Proof with eauto.
 
   (* Complete the proof. *)
 
-  (* pairs *)
-  (* FILL IN HERE *)
-  (* let *)
-  (* FILL IN HERE *)
-  (* fix *)
-  (* FILL IN HERE *)
-(* FILL IN HERE *) Admitted.
+  - (* pairs *)
+    destruct IHHt1...
+    + destruct IHHt2.
+      * reflexivity.
+      * left. apply v_pair; try assumption.
+      * destruct H0 as [t2' Ht2']. right. exists <{ (t1, t2') }>.
+        apply ST_Pair2; assumption.
+    + right. destruct H as [t1' Ht1']. exists <{ (t1', t2) }>.
+      apply ST_Pair1. assumption.
+  - (* fst *)
+    right. destruct IHHt...
+    inversion H; subst; try solve_by_invert.
+    + exists v1. apply ST_Fst2; assumption.
+    + destruct H. exists <{ x0.fst }>. apply ST_Fst1. assumption.
+  - (* snd *)
+    right. destruct IHHt...
+    inversion H; subst; try solve_by_invert.
+    + exists v2. apply ST_Snd2; assumption.
+    + destruct H. exists <{ x0.snd }>. apply ST_Snd1. assumption.
+  - (* let *)
+    right. destruct IHHt1...
+    destruct H as [t1' H]. exists <{ let x0 = t1' in t2 }>.
+    apply ST_Let1. apply H.
+  - (* fix *)
+    right. destruct IHHt...
+    + inversion H; subst; try solve_by_invert.
+      exists <{ [x0 := fix (\x0:T2, t0)] t0 }>.
+      apply ST_FixAbs.
+    + inversion H.
+      exists <{ fix x0 }>.
+      apply ST_Fix1. assumption.
+Qed.
 
 (** [] *)
 
