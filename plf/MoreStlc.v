@@ -1134,11 +1134,11 @@ Fixpoint subst (x : string) (s : tm) (t : tm) : tm :=
   (* Complete the following cases. *)
 
   (* pairs *)
-  | (tm_pair p1 p2) => <{([x:=s]p1, [x:=s]p2)}>
+  | <{(t1, t2)}> => <{([x:=s] t1, [x:=s] t2)}>
   (* let *)
-  | (tm_let y t1 t2) => if String.eqb x y then t else <{ let y = [x:=s]t1 in [x:=s]t2 }>
+  | <{ let y = t1 in t2 }> => if String.eqb x y then t else <{ let y = [x:=s]t1 in [x:=s]t2 }>
   (* fix *)
-  | (tm_fix t) => <{ fix [x:=s]t }>
+  | <{ fix t }> => <{ fix [x:=s]t }>
   | _ => t  (* ... and delete this line when you finish the exercise *)
   end
 
@@ -1385,7 +1385,7 @@ Inductive has_type : context -> tm -> ty -> Prop :=
       Gamma |- t0 \in (T1 * T2) ->
       Gamma |- t0.snd \in T2
   (* let *)
-  | T_Let : forall Gamma t1 t2 T1 T2,
+  | T_Let : forall Gamma x t1 t2 T1 T2,
       Gamma |- t1 \in T1 ->
       (x |-> T1; Gamma) |- t2 \in T2 ->
       Gamma |- (let x = t1 in t2) \in T2
@@ -1588,15 +1588,14 @@ Definition tm_test :=
 
 Example typechecks :
   empty |- tm_test \in (Nat * Nat).
-Proof. unfold tm_test. eauto 15. (* FILL IN HERE *) Admitted.
+Proof. unfold tm_test. eauto 15.
+Qed.
 
 Example reduces :
   tm_test -->* <{(5, 0)}>.
 Proof.
-(* 
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End Sumtest2.
 
@@ -1618,15 +1617,14 @@ Definition tm_test :=
 
 Example typechecks :
   empty |- tm_test \in Nat.
-Proof. unfold tm_test. eauto 20. (* FILL IN HERE *) Admitted.
+Proof. unfold tm_test. eauto 20.
+Qed.
 
 Example reduces :
   tm_test -->* 25.
 Proof.
-(* 
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End ListTest.
 
@@ -1650,12 +1648,13 @@ Definition fact :=
 
 Example typechecks :
   empty |- fact \in (Nat -> Nat).
-Proof. unfold fact. auto 10. (* FILL IN HERE *) Admitted.
+Proof. unfold fact. auto 10.
+Qed.
 
 Example reduces :
   <{fact 4}> -->* 24.
 Proof.
-(* 
+(*
   unfold fact. normalize.
 *)
 (* FILL IN HERE *) Admitted.
@@ -1684,13 +1683,14 @@ Definition map :=
 Example typechecks :
   empty |- map \in
     ((Nat -> Nat) -> ((List Nat) -> (List Nat))).
-Proof. unfold map. auto 10. (* FILL IN HERE *) Admitted.
+Proof. unfold map. auto 10.
+Qed.
 
 Example reduces :
   <{map (\a:Nat, succ a) (1 :: 2 :: (nil Nat))}>
   -->* <{2 :: 3 :: (nil Nat)}>.
 Proof.
-(* 
+(*
   unfold map. normalize.
 *)
 (* FILL IN HERE *) Admitted.
@@ -1718,12 +1718,13 @@ Definition equal :=
 
 Example typechecks :
   empty |- equal \in (Nat -> Nat -> Nat).
-Proof. unfold equal. auto 10. (* FILL IN HERE *) Admitted.
+Proof. unfold equal. auto 10.
+Qed.
 
 Example reduces :
   <{equal 4 4}> -->* 1.
 Proof.
-(* 
+(*
   unfold equal. normalize.
 *)
 (* FILL IN HERE *) Admitted.
@@ -1765,7 +1766,8 @@ Definition eotest :=
 
 Example typechecks :
   empty |- eotest \in (Nat * Nat).
-Proof. unfold eotest. eauto 30. (* FILL IN HERE *) Admitted.
+Proof. unfold eotest. eauto 30.
+Qed.
 
 Example reduces :
   eotest -->* <{(0, 1)}>.
