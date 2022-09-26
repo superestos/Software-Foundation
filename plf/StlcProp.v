@@ -421,9 +421,17 @@ Qed.
 Theorem not_subject_expansion:
   exists t t' T, t --> t' /\ (empty |- t' \in T) /\ ~ (empty |- t \in T).
 Proof.
-  (* Write "exists <{ ... }>" to use STLC notation. *)
-  (* FILL IN HERE *) Admitted.
-
+  exists <{ if true then true else true true }>.
+  exists <{ true }>.
+  exists Ty_Bool.
+  repeat try split.
+  - apply ST_IfTrue.
+  - apply T_True.
+  - intros Hc. inversion Hc; subst.
+    inversion H6; subst.
+    inversion H7; subst.
+    inversion H2.
+Qed.
 (* Do not modify the following line: *)
 Definition manual_grade_for_subject_expansion_stlc : option (nat*string) := None.
 (** [] *)
