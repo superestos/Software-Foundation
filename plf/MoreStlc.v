@@ -2127,13 +2127,21 @@ Proof with eauto.
 
   (* Complete the proof. *)
 
-  (* fst and snd *)
-  (* FILL IN HERE *)
-  (* let *)
-  (* FILL IN HERE *)
-  (* fix *)
-  (* FILL IN HERE *)
-(* FILL IN HERE *) Admitted.
+  - (* fst and snd *)
+    inversion HT. subst. assumption.
+  - inversion HT. subst. assumption.
+  - (* let *)
+    inversion HE; subst; try rewrite H4;
+    eapply substitution_preserves_typing...
+  - (* fix *)
+    inversion HE; subst.
+    + apply IHHT in H1; try reflexivity.
+      apply T_Fix. apply H1.
+    + inversion HT; subst.
+      apply substitution_preserves_typing with T1.
+      assumption.
+      apply T_Fix. assumption.
+Qed.
 
 (** [] *)
 
