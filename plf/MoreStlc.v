@@ -1134,13 +1134,13 @@ Fixpoint subst (x : string) (s : tm) (t : tm) : tm :=
   (* Complete the following cases. *)
 
   (* pairs *)
-  | <{(t1, t2)}> => <{([x:=s] t1, [x:=s] t2)}>
+  | <{ (t1, t2) }> => <{ ([x:=s] t1, [x:=s] t2) }>
+  | <{ t.fst }> => <{ ([x:=s]t).fst }>
+  | <{ t.snd }> => <{ ([x:=s]t).snd }>
   (* let *)
   | <{ let y = t1 in t2 }> => if String.eqb x y then t else <{ let y = [x:=s]t1 in [x:=s]t2 }>
   (* fix *)
-  (*| <{ fix (\f:T1, t1) }> => <{ [f := (\f:T1, t1)] t1 }>
-  | <{ fix t }> => <{ fix [x:=s]t }>*)
-  | _ => t  (* ... and delete this line when you finish the exercise *)
+  | <{ fix t }> => <{ fix [x:=s]t }>
   end
 
 where "'[' x ':=' s ']' t" := (subst x s t) (in custom stlc).
@@ -1290,6 +1290,7 @@ Inductive step : tm -> tm -> Prop :=
     t1 --> t1' ->
     <{ let x=t1 in t2 }> --> <{ let x=t1' in t2 }>
   | ST_LetValue : forall x v1 t2,
+    value v1 ->
     <{ let x=v1 in t2 }> --> <{ [x := v1] t2 }>
   (* fix *)
   | ST_Fix1 : forall t1 t1',
@@ -1694,10 +1695,8 @@ Example reduces :
   <{map (\a:Nat, succ a) (1 :: 2 :: (nil Nat))}>
   -->* <{2 :: 3 :: (nil Nat)}>.
 Proof.
-(*
   unfold map. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End FixTest2.
 
@@ -1772,10 +1771,8 @@ Qed.
 Example reduces :
   eotest -->* <{(0, 1)}>.
 Proof.
-(* 
   unfold eotest. eauto 10. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End FixTest4.
 End Examples.
