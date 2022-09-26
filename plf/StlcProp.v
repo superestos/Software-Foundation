@@ -455,7 +455,17 @@ Proof.
   intros t t' T Hhas_type Hmulti. unfold stuck.
   intros [Hnf Hnot_val]. unfold normal_form in Hnf.
   induction Hmulti.
-  (* FILL IN HERE *) Admitted.
+  - apply Hnf; clear Hnf.
+    assert (H: value x0 \/ exists t' : tm, x0 --> t').
+    { apply progress with T. apply Hhas_type. }
+    destruct H as [H1 | H2].
+    + apply Hnot_val in H1. destruct H1.
+    + apply H2.
+  - apply IHHmulti; clear IHHmulti.
+    + apply preservation with x0; assumption.
+    + assumption.
+    + assumption.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
