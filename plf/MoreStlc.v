@@ -1263,7 +1263,27 @@ Inductive step : tm -> tm -> Prop :=
   (* Add rules for the following extensions. *)
 
   (* pairs *)
-  (* FILL IN HERE *)
+  | ST_Pairs1 : forall t1 t1' t2,
+    t1 --> t1' ->
+    <{(t1, t2)}> --> <{(t1', t2)}>
+  | ST_Pairs2 : forall v1 t2 t2',
+    value v1 ->
+    t2 --> t2' ->
+    <{(v1, t2)}> --> <{(v1, t2')}>
+  | ST_Fst1 : forall t t',
+    t --> t' ->
+    <{t.fst}> --> <{t'.fst}>
+  | ST_Fst2 : forall v1 v2,
+    value v1 ->
+    value v2 ->
+    <{(v1, v2).fst}> --> v1
+  | ST_Snd1 : forall t t',
+    t --> t' ->
+    <{t.snd}> --> <{t'.snd}>
+  | ST_Snd2 : forall v1 v2,
+    value v1 ->
+    value v2 ->
+    <{(v1, v2).snd}> --> v2
   (* let *)
   (* FILL IN HERE *)
   (* fix *)
@@ -1494,10 +1514,8 @@ Qed.
 Example reduces :
   tm_test -->* 6.
 Proof.
-(*
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End ProdTest.
 
@@ -1514,12 +1532,12 @@ Definition tm_test :=
 Example typechecks :
   empty |- tm_test \in Nat.
 Proof. unfold tm_test. eauto 15.
-(* FILL IN HERE *) Admitted.
+Qed.
 
 Example reduces :
   tm_test -->* 6.
 Proof.
-(* 
+(*
   unfold tm_test. normalize.
 *)
 (* FILL IN HERE *) Admitted.
