@@ -1285,7 +1285,11 @@ Inductive step : tm -> tm -> Prop :=
     value v2 ->
     <{(v1, v2).snd}> --> v2
   (* let *)
-  (* FILL IN HERE *)
+  | ST_Let1 : forall x t1 t1' t2,
+    t1 --> t1' ->
+    <{ let x=t1 in t2 }> --> <{ let x=t1' in t2 }>
+  | ST_LetValue : forall x v1 t2,
+    <{ let x=v1 in t2 }> --> <{ [x := v1] t2 }>
   (* fix *)
   (* FILL IN HERE *)
 
@@ -1537,10 +1541,8 @@ Qed.
 Example reduces :
   tm_test -->* 6.
 Proof.
-(*
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End LetTest.
 
@@ -1556,15 +1558,14 @@ Definition tm_test :=
 
 Example typechecks :
   empty |- tm_test \in Nat.
-Proof. unfold tm_test. eauto 15. (* FILL IN HERE *) Admitted.
+Proof. unfold tm_test. eauto 15.
+Qed.
 
 Example reduces :
   tm_test -->* 5.
 Proof.
-(* 
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End Sumtest1.
 
