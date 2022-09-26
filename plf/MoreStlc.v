@@ -1134,11 +1134,11 @@ Fixpoint subst (x : string) (s : tm) (t : tm) : tm :=
   (* Complete the following cases. *)
 
   (* pairs *)
-  (* FILL IN HERE *)
+  | (tm_pair p1 p2) => <{([x:=s]p1, [x:=s]p2)}>
   (* let *)
-  (* FILL IN HERE *)
+  | (tm_let y t1 t2) => if String.eqb x y then t else <{ let y = [x:=s]t1 in [x:=s]t2 }>
   (* fix *)
-  (* FILL IN HERE *)
+  | (tm_fix t) => <{ fix [x:=s]t }>
   | _ => t  (* ... and delete this line when you finish the exercise *)
   end
 
@@ -1350,10 +1350,25 @@ Inductive has_type : context -> tm -> ty -> Prop :=
   (* Add rules for the following extensions. *)
 
   (* pairs *)
-  (* FILL IN HERE *)
+  | T_Pair : forall Gamma t1 t2 T1 T2,
+      Gamma |- t1 \in T1 ->
+      Gamma |- t2 \in T2 ->
+      Gamma |- (t1, t2) \in (T1 * T2)
+  | T_Fst : forall Gamma t0 T1 T2,
+      Gamma |- t0 \in (T1 * T2) ->
+      Gamma |- t0.fst \in T1
+  | T_Snd : forall Gamma t0 T1 T2,
+      Gamma |- t0 \in (T1 * T2) ->
+      Gamma |- t0.snd \in T2
   (* let *)
-  (* FILL IN HERE *)
+  | T_Let : forall Gamma t1 t2 T1 T2,
+      Gamma |- t1 \in T1 ->
+      (x |-> T1; Gamma) |- t2 \in T2 ->
+      Gamma |- (let x = t1 in t2) \in T2
   (* fix *)
+  | T_Fix : forall Gamma t1 T1,
+      Gamma |- t1 \in (T1 -> T1) ->
+      Gamma |- fix t1 \in T1
   (* FILL IN HERE *)
 
 where "Gamma '|-' t '\in' T" := (has_type Gamma t T).
@@ -1452,15 +1467,13 @@ Proof.
      to increase the max search depth of [auto] from the
      default 5 to 10. *)
   auto 10.
-(* FILL IN HERE *) Admitted.
+Qed.
 
 Example reduces :
   tm_test -->* 5.
 Proof.
-(* 
   unfold tm_test. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End Numtest.
 
@@ -1475,12 +1488,13 @@ Definition tm_test :=
 
 Example typechecks :
   empty |- tm_test \in Nat.
-Proof. unfold tm_test. eauto 15. (* FILL IN HERE *) Admitted.
+Proof. unfold tm_test. eauto 15.
+Qed.
 
 Example reduces :
   tm_test -->* 6.
 Proof.
-(* 
+(*
   unfold tm_test. normalize.
 *)
 (* FILL IN HERE *) Admitted.
