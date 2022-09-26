@@ -1138,7 +1138,8 @@ Fixpoint subst (x : string) (s : tm) (t : tm) : tm :=
   (* let *)
   | <{ let y = t1 in t2 }> => if String.eqb x y then t else <{ let y = [x:=s]t1 in [x:=s]t2 }>
   (* fix *)
-  | <{ fix t }> => <{ fix [x:=s]t }>
+  (*| <{ fix (\f:T1, t1) }> => <{ [f := (\f:T1, t1)] t1 }>
+  | <{ fix t }> => <{ fix [x:=s]t }>*)
   | _ => t  (* ... and delete this line when you finish the exercise *)
   end
 
@@ -1291,6 +1292,11 @@ Inductive step : tm -> tm -> Prop :=
   | ST_LetValue : forall x v1 t2,
     <{ let x=v1 in t2 }> --> <{ [x := v1] t2 }>
   (* fix *)
+  | ST_Fix1 : forall t1 t1',
+      t1 --> t1' ->
+      <{ fix t1 }> --> <{ fix t1' }>
+  | ST_FixAbs : forall f t1 T1,
+      <{ fix (\f:T1, t1) }> --> <{ [f := fix (\f:T1, t1)] t1 }>
   (* FILL IN HERE *)
 
   where "t '-->' t'" := (step t t').
@@ -1654,10 +1660,8 @@ Qed.
 Example reduces :
   <{fact 4}> -->* 24.
 Proof.
-(*
   unfold fact. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 
 End FixTest1.
 
@@ -1724,19 +1728,15 @@ Qed.
 Example reduces :
   <{equal 4 4}> -->* 1.
 Proof.
-(*
   unfold equal. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 (* GRADE_THEOREM 0.25: reduces *)
 
 Example reduces2 :
   <{equal 4 5}> -->* 0.
 Proof.
-(* 
   unfold equal. normalize.
-*)
-(* FILL IN HERE *) Admitted.
+Qed.
 (* GRADE_THEOREM 0.25: reduces2 *)
 
 End FixTest3.
