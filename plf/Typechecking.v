@@ -359,15 +359,12 @@ Fixpoint type_check (Gamma : context) (t : tm) : option ty :=
       | _ => fail
       end
 
-  | <{nil T}> => return T
+  | <{nil T}> => return <{{ List T}}>
 
   | <{ t1 :: t2 }> =>
       T1 <- type_check Gamma t1 ;;
       T2 <- type_check Gamma t2 ;;
-      match T2 with
-      | <{{ List T1 }}> => return T2
-      | _ => fail
-      end
+      if eqb_ty T2 <{{ List T1 }}> then return T2 else fail
 
   (* lists (the [tm_lcase] is given for free) *)
   | <{ case t0 of | nil => t1 | x21 :: x22 => t2 }> =>
@@ -411,7 +408,7 @@ Fixpoint type_check (Gamma : context) (t : tm) : option ty :=
   | <{ fix t }> =>
     T <- type_check Gamma t ;;
     match T with
-    | <{{ T1 -> T2 }}> => if eqb_ty T1 T2 then return T1 else fail
+    | <{{ T1 -> T1' }}> => if eqb_ty T1 T1' then return T1 else fail
     | _ => fail
     end
   end.
@@ -478,10 +475,22 @@ Proof with eauto.
     destruct T1; try solve_by_invert.
     case_equality T2 T3.
   (* Complete the following cases. *)
-  (* sums *)
-  (* FILL IN HERE *)
-  (* lists (the [tm_lcase] is given for free) *)
-  (* FILL IN HERE *)
+  - (* inl & inr *)
+    invert_typecheck Gamma t0 T1.
+  - invert_typecheck Gamma t0 T2.
+  - (* sums *)
+    rename s into y1, s0 into y2.
+    rename t3 into t2, t2 into t1, t1 into t0.
+    fully_invert_typecheck Gamma t0 T' Tl Tr.
+    invert_typecheck (y1 |-> Tl; Gamma) t1 T1.
+    invert_typecheck (y2 |-> Tr; Gamma) t2 T2.
+    case_equality T1 T2.
+  - (* nil *)
+    eauto.
+  - (* cons *)
+    invert_typecheck Gamma t1 T1.
+    invert_typecheck Gamma t2 T2.
+    case_equality T2 <{{ List T1 }}>.
   - (* tlcase *)
     rename s into x31, s0 into x32.
     fully_invert_typecheck Gamma t1 T1 T11 T12.
@@ -489,15 +498,23 @@ Proof with eauto.
     remember (x31 |-> T11 ; x32 |-> <{{List T11}}> ; Gamma) as Gamma'2.
     invert_typecheck Gamma'2 t3 T3.
     case_equality T2 T3.
-  (* unit *)
+  - (* unit *)
+    eauto.
   (* FILL IN HERE *)
-  (* pairs *)
-  (* FILL IN HERE *)
-  (* let *)
-  (* FILL IN HERE *)
-  (* fix *)
-  (* FILL IN HERE *)
-  (* FILL IN HERE *) Admitted.
+  - (* pairs *)
+    invert_typecheck Gamma t1 T1.
+    invert_typecheck Gamma t2 T2.
+  - (* fst & snd *)
+    fully_invert_typecheck Gamma t T T1 T2.
+  - fully_invert_typecheck Gamma t T T1 T2.
+  - (* let *)
+    rename s into x.
+    invert_typecheck Gamma t1 T1.
+    invert_typecheck (x |-> T1; Gamma) t2 T2.
+  - (* fix *)
+    fully_invert_typecheck Gamma t T T1 T1'.
+    case_equality T1 T1'.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard (ext_type_checking_complete) *)
