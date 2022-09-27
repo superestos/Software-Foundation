@@ -340,9 +340,36 @@ Fixpoint type_check (Gamma : context) (t : tm) : option ty :=
   (* Complete the following cases. *)
   
   (* sums *)
-  (* FILL IN HERE *)
+
+  | <{ inl T2 t1 }> =>
+      T1 <- type_check Gamma t1 ;;
+      return <{{ T1 + T2 }}>
+
+  | <{ inr T1 t2 }> =>
+      T2 <- type_check Gamma t2 ;;
+      return <{{ T1 + T2 }}>
+
+  | <{case t0 of | inl y1 => t1 | inr y2 => t2}> =>
+      T0 <- type_check Gamma t0 ;;
+      match T0 with
+      | <{{ Tl + Tr }}> =>
+          T1 <- type_check (y1 |-> Tl; Gamma) t1 ;;
+          T2 <- type_check (y2 |-> Tr; Gamma) t2 ;;
+          if eqb_ty T1 T2 then return T1 else fail
+      | _ => fail
+      end
+
+  | <{nil T}> => return T
+
+  | <{ t1 :: t2 }> =>
+      T1 <- type_check Gamma t1 ;;
+      T2 <- type_check Gamma t2 ;;
+      match T2 with
+      | <{{ List T1 }}> => return T2
+      | _ => fail
+      end
+
   (* lists (the [tm_lcase] is given for free) *)
-  (* FILL IN HERE *)
   | <{ case t0 of | nil => t1 | x21 :: x22 => t2 }> =>
       T0 <- type_check Gamma t0 ;;
       match T0 with
@@ -353,14 +380,40 @@ Fixpoint type_check (Gamma : context) (t : tm) : option ty :=
       | _ => fail
       end
   (* unit *)
-  (* FILL IN HERE *)
+  | <{unit}> => return <{{Unit}}>
   (* pairs *)
-  (* FILL IN HERE *)
+  | <{(t1, t2)}> =>
+      T1 <- type_check Gamma t1 ;;
+      T2 <- type_check Gamma t2 ;;
+      return <{{T1 * T2}}>
+
+  | <{t.fst}> =>
+      T <- type_check Gamma t ;;
+      match T with
+      | <{{T1 * T2}}> => return T1
+      | _ => fail
+      end
+
+  | <{t.snd}> =>
+      T <- type_check Gamma t ;;
+      match T with
+      | <{{T1 * T2}}> => return T2
+      | _ => fail
+      end
+
   (* let *)
-  (* FILL IN HERE *)
+  | <{let x = t1 in t2}> =>
+    T1 <- type_check Gamma t1 ;;
+    T2 <- type_check (x |-> T1; Gamma) t2 ;;
+    return T2
+
   (* fix *)
-  (* FILL IN HERE *)
-  | _ => None  (* ... and delete this line when you complete the exercise. *)
+  | <{ fix t }> =>
+    T <- type_check Gamma t ;;
+    match T with
+    | <{{ T1 -> T2 }}> => if eqb_ty T1 T2 then return T1 else fail
+    | _ => fail
+    end
   end.
 (* Do not modify the following line: *)
 Definition manual_grade_for_type_check_defn : option (nat*string) := None.
