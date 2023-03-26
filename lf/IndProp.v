@@ -1398,14 +1398,20 @@ Proof.
     induction H; simpl; try reflexivity.
     + rewrite IHexp_match1. rewrite IHexp_match2. reflexivity.
     + rewrite IHexp_match. reflexivity.
-    + rewrite IHexp_match. destruct (re_not_empty re1); reflexivity.
+    + rewrite IHexp_match. apply orb_true_iff. auto.
   - intros. induction re; try inversion H.
     + exists []. apply MEmpty.
     + exists [t]. apply MChar.
-    + assert( Hre1: re_not_empty re1 = true ).
-      
-      assert( Hre2: re_not_empty re2 = true ).
-      
+    + apply andb_true_iff in H1. destruct H1 as [Hre1 Hre2].
+      apply IHre1 in Hre1. apply IHre2 in Hre2.
+      destruct Hre1 as [t1 Hre1]. destruct Hre2 as [t2 Hre2].
+      exists (t1 ++ t2). apply MApp; assumption.
+    + apply orb_true_iff in H1. destruct H1.
+      * apply IHre1 in H0. destruct H0.
+        exists x. apply MUnionL. assumption.
+      * apply IHre2 in H0. destruct H0.
+        exists x. apply MUnionR. assumption.
+    + exists []. apply MStar0.
 Qed.
 (** [] *)
 
@@ -1548,7 +1554,24 @@ Lemma MStar'' : forall T (s : list T) (re : reg_exp T),
     s = fold app ss []
     /\ forall s', In s' ss -> s' =~ re.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  remember (Star re) as re'.
+  induction H; try discriminate.
+  - exists []. split.
+    + reflexivity.
+    + intros. inversion H.
+  - inversion Heqre'.
+    rewrite -> H2 in *.
+    induction s1; intros.
+    + simpl. apply IHexp_match2. reflexivity.
+    + apply IHexp_match2 in Heqre'.
+      destruct Heqre'. destruct H1.
+      exists ((x::s1)::x0). split.
+      * simpl. rewrite <- H1. reflexivity.
+      * intros. destruct H4.
+        { rewrite <- H4. assumption. }
+        { apply H3 in H4. assumption. }
+Qed.
 (** [] *)
 
 (** **** Exercise: 5 stars, advanced (weak_pumping)
