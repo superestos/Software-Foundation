@@ -737,6 +737,9 @@ Qed.
 Theorem Sn_le_Sm__n_le_m : forall n m,
   S n <= S m -> n <= m.
 Proof.
+  intros n m H.
+  induction n.
+  - apply O_le_n.
   (* FILL IN HERE *) Admitted.
 
 Theorem lt_ge_cases : forall n m,
@@ -747,7 +750,11 @@ Proof.
 Theorem le_plus_l : forall a b,
   a <= a + b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros a b.
+  induction b.
+  - rewrite add_comm. rewrite plus_O_n. apply le_n.
+  - rewrite <- plus_n_Sm. apply (le_S a (a + b) IHb).
+Qed.
 
 Theorem plus_le : forall n1 n2 m,
   n1 + n2 <= m ->
@@ -766,13 +773,20 @@ Theorem plus_le_compat_l : forall n m p,
   n <= m ->
   p + n <= p + m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p H.
+  induction p.
+  - repeat rewrite plus_O_n. assumption.
+  - simpl. apply n_le_m__Sn_le_Sm. assumption.
+Qed.
 
 Theorem plus_le_compat_r : forall n m p,
   n <= m ->
   n + p <= m + p.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  rewrite add_comm with m p. rewrite add_comm with n p.
+  apply plus_le_compat_l.
+Qed.
 
 Theorem le_plus_trans : forall n m p,
   n <= m ->
@@ -784,7 +798,13 @@ Theorem n_lt_m__n_le_m : forall n m,
   n < m ->
   n <= m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold lt. intros n m H.
+  apply Sn_le_Sm__n_le_m.
+  rewrite <- plus_1_l with m.
+  rewrite add_comm.
+  apply le_plus_trans.
+  assumption.
+Qed.
 
 Theorem plus_lt : forall n1 n2 m,
   n1 + n2 < m ->
@@ -795,7 +815,16 @@ Proof.
 Theorem leb_complete : forall n m,
   n <=? m = true -> n <= m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  generalize dependent m.
+  induction n.
+  - intros. apply O_le_n.
+  - intros. destruct m.
+    + inversion H.
+    + simpl in H. apply IHn in H.
+      apply n_le_m__Sn_le_Sm.
+      assumption.
+Qed.
 
 (** Hint: The next one may be easiest to prove by induction on [m]. *)
 
@@ -803,7 +832,14 @@ Theorem leb_correct : forall n m,
   n <= m ->
   n <=? m = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  generalize dependent n.
+  induction m.
+  - intros. inversion H. reflexivity.
+  - intros. destruct n.
+    + reflexivity.
+    + simpl. apply IHm. apply Sn_le_Sm__n_le_m. assumption.
+Qed.
 
 (** Hint: The next one can easily be proved without using [induction]. *)
 
@@ -811,7 +847,12 @@ Proof.
 Theorem leb_true_trans : forall n m o,
   n <=? m = true -> m <=? o = true -> n <=? o = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o Hnm Hmo.
+  apply leb_complete in Hnm.
+  apply leb_complete in Hmo.
+  apply leb_correct.
+  apply (le_trans n m o); assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (leb_iff) *)
