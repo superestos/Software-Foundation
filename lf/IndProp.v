@@ -737,10 +737,13 @@ Qed.
 Theorem Sn_le_Sm__n_le_m : forall n m,
   S n <= S m -> n <= m.
 Proof.
-  intros n m H.
-  induction n.
-  - apply O_le_n.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  - apply le_n.
+  - apply le_trans with (n := S n).
+    + apply le_S. apply le_n.
+    + assumption.
+Qed.
 
 Theorem lt_ge_cases : forall n m,
   n < m \/ n >= m.
@@ -760,7 +763,16 @@ Theorem plus_le : forall n1 n2 m,
   n1 + n2 <= m ->
   n1 <= m /\ n2 <= m.
 Proof.
- (* FILL IN HERE *) Admitted.
+  intros.
+  split.
+  - apply (le_trans n1 (n1 + n2) m).
+    apply le_plus_l.
+    assumption.
+  - rewrite add_comm in H.
+    apply (le_trans n2 (n2 + n1) m).
+    apply le_plus_l.
+    assumption.
+Qed.
 
 (** Hint: the next one may be easiest to prove by induction on [n]. *)
 
@@ -978,6 +990,13 @@ Proof.
   intros l. induction l as [| x l' IHl].
   - apply subseq_empty.
   - apply (subseq_match x l' l' IHl).
+Qed.
+
+Lemma subseq_empty_seq : forall (l : list nat), subseq [] l.
+Proof.
+  intros. induction l.
+  - apply subseq_empty.
+  - apply subseq_skip. assumption.
 Qed.
 
 Theorem subseq_app : forall (l1 l2 l3 : list nat),
@@ -1255,7 +1274,13 @@ Lemma MStar' : forall T (ss : list (list T)) (re : reg_exp T),
   (forall s, In s ss -> s =~ re) ->
   fold app ss [] =~ Star re.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. induction ss.
+  - simpl. apply MStar0.
+  - simpl. apply MStarApp.
+    + apply (H x). left. reflexivity.
+    + apply IHss. intros s I.
+      apply (H s). right. assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, standard, optional (reg_exp_of_list_spec)
@@ -1355,13 +1380,33 @@ Qed.
     regular expression matches some string. Prove that your function
     is correct. *)
 
-Fixpoint re_not_empty {T : Type} (re : reg_exp T) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint re_not_empty {T : Type} (re : reg_exp T) : bool :=
+  match re with
+  | EmptySet => false
+  | EmptyStr => true
+  | Char x => true
+  | App re1 re2 => re_not_empty re1 && re_not_empty re2
+  | Union re1 re2 => re_not_empty re1 || re_not_empty re2
+  | Star re => true
+  end.
 
 Lemma re_not_empty_correct : forall T (re : reg_exp T),
   (exists s, s =~ re) <-> re_not_empty re = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros. split.
+  - intros. destruct H.
+    induction H; simpl; try reflexivity.
+    + rewrite IHexp_match1. rewrite IHexp_match2. reflexivity.
+    + rewrite IHexp_match. reflexivity.
+    + rewrite IHexp_match. destruct (re_not_empty re1); reflexivity.
+  - intros. induction re; try inversion H.
+    + exists []. apply MEmpty.
+    + exists [t]. apply MChar.
+    + assert( Hre1: re_not_empty re1 = true ).
+      
+      assert( Hre2: re_not_empty re2 = true ).
+      
+Qed.
 (** [] *)
 
 (* ================================================================= *)
