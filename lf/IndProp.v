@@ -1677,6 +1677,15 @@ Proof.
     + apply IHm.
 Qed.
 
+Lemma napp_induct :
+  forall T m s (re : reg_exp T),
+  s =~ (Star re) -> napp m s =~ (Star re).
+Proof.
+  intros. induction m.
+  - simpl. apply MStar0.
+  - simpl. apply star_app; assumption.
+Qed.
+
 (** The (weak) pumping lemma itself says that, if [s =~ re] and if the
     length of [s] is at least the pumping constant of [re], then [s]
     can be split into three substrings [s1 ++ s2 ++ s3] in such a way
@@ -1705,6 +1714,67 @@ Proof.
        | re | s1 s2 re Hmatch1 IH1 Hmatch2 IH2 ].
   - (* MEmpty *)
     simpl. intros contra. inversion contra.
+  - (* MChar *)
+    simpl. intros contra. inversion contra. inversion H0.
+  - (* MApp *)
+    simpl. intros H. rewrite app_length in H. apply add_le_cases in H.
+    destruct H.
+    + apply IH1 in H. destruct H. destruct H. destruct H.
+      destruct H as [H0 H1]. destruct H1 as [H1 H2].
+      exists x. exists x0. exists (x1 ++ s2).
+      split. rewrite H0. repeat rewrite <- app_assoc. reflexivity.
+      split. assumption.
+      intros. rewrite app_assoc. rewrite app_assoc.
+      rewrite <- app_assoc with (l := x).
+      apply MApp. apply H2. assumption.
+    + apply IH2 in H. destruct H. destruct H. destruct H.
+      destruct H as [H0 H1]. destruct H1 as [H1 H2].
+      exists (s1 ++ x). exists x0. exists x1.
+      split. repeat rewrite <- app_assoc. rewrite H0. reflexivity.
+      split. assumption.
+      intros. rewrite <- app_assoc.
+      apply MApp. assumption. apply H2.
+  - (* MUnionL *)
+    simpl. intros. apply plus_le in H. destruct H.
+    apply IH in H. destruct H. destruct H. destruct H.
+    destruct H as [H1 H2]. destruct H2 as [H2 H3].
+    exists x. exists x0. exists x1.
+    split. assumption.
+    split. assumption.
+    intros. apply MUnionL. apply H3.
+  - (* MUnionR *)
+    simpl. intros. apply plus_le in H. destruct H as [H0 H].
+    apply IH in H. destruct H. destruct H. destruct H.
+    destruct H as [H1 H2]. destruct H2 as [H2 H3].
+    exists x. exists x0. exists x1.
+    split. assumption.
+    split. assumption.
+    intros. apply MUnionR. apply H3. 
+  - (* MStar0 *)
+    simpl. intros. inversion H.
+    apply pumping_constant_0_false in H1. inversion H1.
+  - (* MStarApp *)
+    simpl. intros.
+    assert (Hlen: 1 <= (length (s1 ++ s2))).
+    {
+      apply (le_trans 1 (pumping_constant re) (length (s1 ++ s2))).
+      apply pumping_constant_ge_1.
+      assumption.
+    }
+    rewrite app_length in Hlen.
+    destruct s1.
+    + remember s2 as s2'. destruct s2'.
+      * inversion Hlen.
+      * rewrite Heqs2' in *.
+        exists []. exists s2. exists [].
+        split. rewrite app_nil_r. reflexivity.
+        split. rewrite <- Heqs2'. unfold not. intros contra. inversion contra.
+        intros m. rewrite app_nil_r. simpl. apply napp_induct. assumption.
+    + exists []. exists (x::s1). exists s2. simpl.
+      split. reflexivity.
+      split. unfold not. intros contra. inversion contra.
+      intros. apply napp_star; assumption.
+Qed.
   (* FILL IN HERE *) Admitted.
 (** [] *)
 
