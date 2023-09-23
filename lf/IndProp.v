@@ -1775,7 +1775,6 @@ Proof.
       split. unfold not. intros contra. inversion contra.
       intros. apply napp_star; assumption.
 Qed.
-  (* FILL IN HERE *) Admitted.
 (** [] *)
 
 (** **** Exercise: 5 stars, advanced, optional (pumping)
