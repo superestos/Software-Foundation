@@ -85,6 +85,7 @@ Proof using. intros. subst~. Qed.
 
 End Properties.
 
+#[global]
 Hint Immediate eq_prod2 eq_prod3 eq_prod4.
 
 
@@ -292,4 +293,4 @@ Tactic Notation "unfolds_unproj" :=
          unproj41, unproj42, unproj43, unproj44,
          unproj51 in *.
 
-(* 2022-08-08 17:28 *)
+(* 2023-08-23 12:57 *)

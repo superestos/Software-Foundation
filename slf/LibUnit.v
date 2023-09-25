@@ -31,6 +31,7 @@ From SLF Require Import LibTactics LibLogic LibReflect.
 (* ================================================================= *)
 (** ** Inhabited *)
 
+#[global]
 Instance Inhab_unit : Inhab unit.
 Proof using. intros. apply (Inhab_of_val tt). Qed.
 
@@ -48,4 +49,4 @@ Proof using. intros. destruct tt1. destruct~ tt2. Qed.
 
 
 
-(* 2022-08-08 17:28 *)
+(* 2023-08-23 12:58 *)

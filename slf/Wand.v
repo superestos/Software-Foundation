@@ -595,7 +595,7 @@ Qed.
 
 Notation "'Fun' x ':=' F1" :=
   ((wpgen_fun (fun x => F1)))
-  (at level 69, x ident, right associativity,
+  (at level 69, x name, right associativity,
   format "'[v' '[' 'Fun'  x  ':='  F1  ']' ']'").
 
 (* ----------------------------------------------------------------- *)
@@ -673,7 +673,7 @@ Qed.
 
 Notation "'Fix' f x ':=' F1" :=
   ((wpgen_fix (fun f x => F1)))
-  (at level 69, f ident, x ident, right associativity,
+  (at level 69, f name, x name, right associativity,
   format "'[v' '[' 'Fix'  f  x  ':='  F1  ']' ']'").
 
 (** Remark: similarly to [xfun], one could devise a [xfix] tactic.
@@ -2148,4 +2148,4 @@ End SummaryHprop.
     have advertised for the interest of this rule. The ramified frame
     rule was integrated in CFML 2.0 in 2018. *)
 
-(* 2022-08-08 17:28 *)
+(* 2023-08-23 12:58 *)

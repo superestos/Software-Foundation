@@ -173,7 +173,7 @@ Qed.
     [incr], the [xapp] tactic will be able to automatically invoke the lemma
     [triple_incr]. *)
 
-Hint Resolve triple_incr : triple.
+#[global] Hint Resolve triple_incr : triple.
 
 (** To minimize the amount of syntactic noise in specifications, we leverage
     an advanced feature of Coq's coercion mechanism. Concretely, instead of
@@ -273,13 +273,7 @@ Definition quadruple : val :=
     [4*n]. Hint: follow the pattern of the previous proof. *)
 
 (* FILL IN HERE *)
-Lemma quadruple_proof : forall (n:int),
-  triple (quadruple n)
-    \[]
-    (fun r => \[r = 4*n]).
-Proof.
-  xwp. xapp. xapp. xsimpl. math.
-Qed.
+
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, especially useful (triple_inplace_double) *)
@@ -298,13 +292,7 @@ Definition inplace_double : val :=
     pattern of the first example, namely [triple_incr]. *)
 
 (* FILL IN HERE *)
-Lemma inplace_double_proof : forall (p:loc) (n:int),
-  triple <{ inplace_double p }>
-    (p ~~> n)
-    (fun _ => (p ~~> (n*2))).
-Proof.
-  xwp. xapp. xapp. xapp. xsimpl. math.
-Qed.
+
 (** [] *)
 
 (** From here on, we use the command [Proof using] for introducing a proof
@@ -355,7 +343,7 @@ Qed.
 (** Because we will make use of the function [incr_two] later in this chapter,
     we register the specification [triple_incr_two] in the [triple] database. *)
 
-Hint Resolve triple_incr_two : triple.
+#[global] Hint Resolve triple_incr_two : triple.
 
 (** A quick point of vocabulary before moving on: Separation Logic expressions
     such as [p ~~> n] or [\[]] or [H1 \* H2] are called "heap predicates",
@@ -573,7 +561,7 @@ Parameter triple_ref : forall (v:val),
 
 Notation "'funloc' p '=>' H" :=
   (fun (r:val) => \exists p, \[r = val_loc p] \* H)
-  (at level 200, p ident, format "'funloc'  p  '=>'  H").
+  (at level 200, p name, format "'funloc'  p  '=>'  H").
 
 (** Using this notation, the specification [triple_ref] can be reformulated
     more concisely, as follows. *)
@@ -760,7 +748,7 @@ Proof using. (* FILL IN HERE *) Admitted.
 
 (** [] *)
 
-Hint Resolve triple_get_and_free : triple.
+#[global] Hint Resolve triple_get_and_free : triple.
 
 (* ################################################################# *)
 (** * Recursive Functions *)
@@ -1178,4 +1166,4 @@ Proof using. (* FILL IN HERE *) Admitted.
     predicates are directly inspired from those introduced in the Ynot project
     [Chlipala et al 2009] (in Bib.v). See chapter [Bib] for references. *)
 
-(* 2022-08-08 17:28 *)
+(* 2023-08-23 12:58 *)
