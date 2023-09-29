@@ -510,7 +510,13 @@ Definition transfer : val :=
     references. *)
 
 (* FILL IN HERE *)
-
+Lemma triple_transfer : forall (p q:loc) (n m:int),
+    triple (transfer p q)
+      (p ~~> n \* q ~~> m)
+      (fun _ => p ~~> (n + m) \* q ~~> 0).
+Proof using.
+  intros. xwp. xapp. xapp. xapp. xapp. xapp. xsimpl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard, especially useful (triple_transfer_aliased)
@@ -520,7 +526,13 @@ Definition transfer : val :=
     should take the form [triple (transfer p p) _ _]. *)
 
 (* FILL IN HERE *)
-
+Lemma triple_transfer_aliased : forall (p:loc) (n:int),
+  triple (transfer p p)
+    (p ~~> n)
+    (fun _ => p ~~> 0).
+Proof using.
+  intros. xwp. repeat xapp. xsimpl.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -744,8 +756,9 @@ Lemma triple_get_and_free : forall p v,
   triple (get_and_free p)
     (p ~~> v)
     (fun r => \[r = v]).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. xwp. repeat xapp. xval. xsimpl. auto.
+Qed.
 (** [] *)
 
 #[global] Hint Resolve triple_get_and_free : triple.
