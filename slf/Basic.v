@@ -967,7 +967,21 @@ Lemma triple_repeat_incr : forall (m n:int) (p:loc),
     [intros m. induction_wf IH: ...], but make sure to not leave [n] in the
     goal, otherwise the induction principle that you obtain is too weak. *)
 
-Proof using. (* FILL IN HERE *) Admitted.
+Proof using. (* FILL IN HERE *)
+  intros m. induction_wf IH: (downto 0) m.
+  unfold downto in IH.
+  intros. xwp.
+  xapp. xif.
+  {
+    intros C.
+    repeat xapp; try xsimpl; math.
+  }
+  {
+    intros C.
+    xval. xsimpl.
+    math.
+  }
+Qed.
 
 (** [] *)
 
@@ -1109,8 +1123,17 @@ Lemma triple_step_transfer : forall p q n m,
     Hint: to set up the induction, follow the pattern shown in
     the proof of [triple_repeat_incr']. *)
 
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. gen n H.
+  induction_wf IH: (downto 0) m. unfold downto in IH.
+  xwp. repeat xapp. xif.
+  {
+    intro C. repeat xapp; try xsimpl; math.
+  }
+  {
+    intro C. xval. xsimpl; math.
+  }
+Qed.
 (** [] *)
 
 (* ################################################################# *)
