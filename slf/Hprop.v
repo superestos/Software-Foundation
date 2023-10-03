@@ -362,8 +362,16 @@ Lemma hoare_conseq : forall t H Q H' Q',
   H ==> H' ->
   Q' ===> Q ->
   hoare t H Q.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  unfold hoare. intros.
+  apply H1 in H3.
+  apply (H0 s) in H3.
+  destruct H3. destruct H3. destruct H3.
+  exists x x0.
+  split.
+  - assumption.
+  - apply H2. assumption.
+Qed.
 (** [] *)
 
 (** The frame rule asserts that if one can derive a specification of
@@ -601,8 +609,10 @@ Proof using. introv M. hnf in M. eauto. Qed.
 
 Lemma hstar_hpure_l : forall P H h,
   (\[P] \* H) h = (P /\ H h).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. eapply propositional_extensionality.
+  split.
+Admitted.
 (** [] *)
 
 (* ################################################################# *)
@@ -779,8 +789,9 @@ Axiom functional_extensionality : forall A B (f g:A->B),
 Lemma predicate_extensionality_derived : forall A (P Q:A->Prop),
   (forall x, P x <-> Q x) ->
   P = Q.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  apply predicate_extensionality.
+Qed.
 (** [] *)
 
 End Extensionality.
