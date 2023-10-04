@@ -588,8 +588,10 @@ Parameter triple_val : forall v H Q,
 
 Lemma triple_val_minimal : forall v,
   triple (trm_val v) \[] (fun r => \[r = v]).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. apply triple_val.
+  xsimpl. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, especially useful (triple_val')
@@ -601,8 +603,13 @@ Proof using. (* FILL IN HERE *) Admitted.
 Lemma triple_val' : forall v H Q,
   H ==> Q v ->
   triple (trm_val v) H Q.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  eapply triple_conseq_frame.
+  - apply triple_val_minimal.
+  - rewrite hstar_hempty_l. apply himpl_refl.
+  - intro r. xsimpl. intro M. rewrite M. assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, standard, especially useful (triple_let_val)
