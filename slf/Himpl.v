@@ -90,8 +90,11 @@ Lemma himpl_antisym : forall H1 H2,
   (H1 ==> H2) ->
   (H2 ==> H1) ->
   H1 = H2.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  introv M1 M2.
+  apply predicate_extensionality.
+  intro h. split; eauto.
+Qed.
 (** [] *)
 
 (** Remark: as the proof scripts show, the fact that entailment on [hprop]
@@ -207,8 +210,13 @@ Proof using. (* FILL IN HERE *) Admitted.
 Lemma himpl_frame_r : forall H1 H2 H2',
   H2 ==> H2' ->
   (H1 \* H2) ==> (H1 \* H2').
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  rewrite <- (hstar_comm H2).
+  rewrite <- (hstar_comm H2').
+  apply himpl_frame_l.
+  assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard, especially useful (himpl_frame_lr)
@@ -222,8 +230,12 @@ Lemma himpl_frame_lr : forall H1 H1' H2 H2',
   H1 ==> H1' ->
   H2 ==> H2' ->
   (H1 \* H2) ==> (H1' \* H2').
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  apply himpl_trans with (H1' \* H2).
+  apply himpl_frame_l. assumption.
+  apply himpl_frame_r. assumption.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -246,8 +258,15 @@ Lemma himpl_hstar_hpure_r : forall P H H',
   P ->
   (H ==> H') ->
   H ==> (\[P] \* H').
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  intro h.
+  rewrite hstar_hpure_l.
+  intro M.
+  split.
+  - assumption.
+  - apply H1. assumption.
+Qed.
 (** [] *)
 
 (** Reciprocally, consider an entailment of the form [(\[P] \* H) ==> H'].
@@ -265,8 +284,13 @@ Proof using. (* FILL IN HERE *) Admitted.
 Lemma himpl_hstar_hpure_l : forall (P:Prop) (H H':hprop),
   (P -> H ==> H') ->
   (\[P] \* H) ==> H'.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  intro h.
+  rewrite hstar_hpure_l.
+  intro.
+  apply H0; apply H1.
+Qed.
 (** [] *)
 
 (** Consider an entailment of the form [H ==> (\exists x, J x)], where [x]
@@ -280,8 +304,13 @@ Proof using. (* FILL IN HERE *) Admitted.
 Lemma himpl_hexists_r : forall A (x:A) H J,
   (H ==> J x) ->
   H ==> (\exists x, J x).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  apply himpl_trans with (J x).
+  assumption.
+  intro h.
+  apply hexists_intro.
+Qed.
 (** [] *)
 
 (** Reciprocally, consider an entailment [(\exists x, (J x)) ==> H].
