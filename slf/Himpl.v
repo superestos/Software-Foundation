@@ -423,8 +423,14 @@ Lemma triple_conseq_frame : forall H2 H1 Q1 t H Q,
 
     Prove the combined consequence-frame rule. *)
 
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  eapply triple_frame in H0.
+  eapply triple_conseq.
+  - apply H0.
+  - apply H3.
+  - apply H4.
+Qed.
 (** [] *)
 
 (* ================================================================= *)
@@ -936,8 +942,12 @@ Lemma xchange_lemma : forall H1 H1' H H' H2,
   H ==> H1 \* H2 ->
   H1' \* H2 ==> H' ->
   H ==> H'.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  xchange H3.
+  xchange H0.
+  apply H4.
+Qed.
 (** [] *)
 
 End XsimplTactic.
@@ -967,8 +977,13 @@ Module FundamentalProofs.
 Lemma himpl_frame_l : forall H2 H1 H1',
   H1 ==> H1' ->
   (H1 \* H2) ==> (H1' \* H2).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. unfold hstar.
+  hnf. intros.
+  destruct H0 as [x1 [x2 H0]].
+  exists x1 x2.
+  repeat split; try apply H; try apply H0; assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard, especially useful (himpl_frame_r)
@@ -978,8 +993,13 @@ Proof using. (* FILL IN HERE *) Admitted.
 Lemma himpl_frame_r : forall H1 H2 H2',
   H2 ==> H2' ->
   (H1 \* H2) ==> (H1 \* H2').
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. unfold hstar.
+  hnf. intros.
+  destruct H0 as [x1 [x2 H0]].
+  exists x1 x2.
+  repeat split; try apply H; try apply H0; assumption.
+Qed.
 (** [] *)
 
 (** The second simplest result is the extrusion property for existentials.
