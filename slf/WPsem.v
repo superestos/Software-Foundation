@@ -450,8 +450,27 @@ Definition wp (t:trm) (Q:val->hprop) : hprop :=
 
 Lemma wp_equiv : forall t H Q,
   (H ==> wp t Q) <-> (triple t H Q).
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros. unfold wp. split.
+  - intro I.
+    assert (M: triple t (\exists H, H \* \[triple t H Q]) Q).
+    {
+      apply triple_hexists.
+      intro x.
+      rewrite hstar_comm.
+      apply triple_hpure.
+      auto.
+    }
+    applys triple_conseq.
+    apply M.
+    assumption.
+    auto.
+  - intro I.
+    exists H.
+    rewrite hstar_comm.
+    rewrite hstar_hpure_l.
+    split; assumption.
+Qed.
 (** [] *)
 
 End WpHighLevel.
