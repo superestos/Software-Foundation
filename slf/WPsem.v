@@ -573,8 +573,14 @@ Lemma triple_hexists_in_wp : forall t Q A (J:A->hprop),
   (forall x, (J x ==> wp t Q)) ->
   (\exists x, J x) ==> wp t Q.
 
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  unfold himpl.
+  introv M.
+  introv N.
+  destruct N as [x N].
+  apply (M x) in N.
+  apply N.
+Qed.
 (** [] *)
 
 (** In other words, in the [wp] presentation, we do not need
@@ -605,8 +611,15 @@ Lemma wp_conseq_frame_trans : forall t H H1 H2 Q1 Q,
   H ==> H1 \* H2 ->
   Q1 \*+ H2 ===> Q ->
   H ==> wp t Q.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros t H H1 H2 Q1 Q M N K.
+  apply wp_equiv.
+  apply wp_equiv in M.
+  eapply triple_conseq_frame.
+  - apply M.
+  - apply N.
+  - apply K.
+Qed.
 (** [] *)
 
 (** The combined structural rule for [wp] can actually be stated in a more
@@ -649,8 +662,12 @@ Parameter wp_if : forall b t1 t2 Q,
 
 Lemma wp_if' : forall b t1 t2 Q,
   (if b then (wp t1 Q) else (wp t2 Q)) ==> wp (trm_if b t1 t2) Q.
-Proof using. (* FILL IN HERE *) Admitted.
-
+Proof using. (* FILL IN HERE *)
+  intros.
+  rewrite wp_equiv.
+  apply triple_if_case;
+  intro C; rewrite C; apply wp_pre.
+Qed.
 (** [] *)
 
 End WpIfAlt.
